@@ -21,6 +21,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <form action="/signout" method="POST">
+        <button className="signOut" type="submit">Sign out</button>
+      </form>
     </div>
   );
 }
