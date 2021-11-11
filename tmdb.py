@@ -8,9 +8,17 @@ API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.themoviedb.org/3"
 
 
+def remove_people(response_json):
+    for result in response_json["results"]:
+        if result["media_type"] == "person":
+            response_json["results"].remove(result)
+
+
 def search(title):
     response = requests.get(
         BASE_URL
         + f"/search/multi?api_key={API_KEY}&language=en-US&query={title}&page=1"
     )
-    return response.json()
+    response_json = response.json()
+    remove_people(response_json)
+    return response_json
