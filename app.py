@@ -85,18 +85,7 @@ def index():
             poster_path, title, vote_average, release_date, popularity
         )
     ]
-    popular_movie_data = {
-        "popular_movie": popular_movie,
-    }
-    data = json.dumps(popular_movie_data)
-    return flask.render_template(
-        "index.html",
-        data=data,
-    )
 
-
-@bp.route("/top_rated")
-def top_rated():
     (poster_path, title, vote_average, release_date, popularity) = get_top_rated_movie()
     top_rated_movie = [
         {
@@ -110,14 +99,16 @@ def top_rated():
             poster_path, title, vote_average, release_date, popularity
         )
     ]
-    top_rated_movie_data = {
+
+    movie_data = {
+        "popular_movie": popular_movie,
         "top_rated_movie": top_rated_movie,
     }
-    data = json.dumps(top_rated_movie_data)
-    print(data)
+    data = json.dumps(movie_data)
+
     return flask.render_template(
-        "top_rated.html",
-        top_rated_data=data,
+        "index.html",
+        data=data,
     )
 
 
