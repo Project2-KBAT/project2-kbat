@@ -14,7 +14,7 @@ def remove_people(response_json):
             response_json["results"].remove(result)
 
 
-def search(title):
+def api_search(title):
     response = requests.get(
         BASE_URL
         + f"/search/multi?api_key={API_KEY}&language=en-US&query={title}&page=1"
