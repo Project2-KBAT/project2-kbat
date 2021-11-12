@@ -23,14 +23,12 @@ function App() {
               <div className="sidebar-sticky">
                 <ul className="nav flex-column">
                   <li className="nav-item">
-                    <a className="nav-link active" href="#">
-                      <span data-feather="home"></span>
-                      <i className="material-icons">movie</i> Videos <span className="sr-only">(current)</span>
+                    <a className="nav-link active">
+                      <img src="https://img.icons8.com/ios/32/000000/video.png" alt="" />
+                      <div>
+                        <Link to="/detail">Detail</Link>
+                      </div>
                     </a>
-                  </li>
-                  <li className="nav-item">
-                      <img src="https://img.icons8.com/ios/50/000000/video.png"/>
-                      <Link to="/detail">Detail</Link>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">
@@ -85,11 +83,10 @@ function App() {
                     </a>
                   </li>
                   <li className="nav-item">
-                      <img src="https://img.icons8.com/ios/32/000000/logout-rounded--v1.png" alt="" />
-                      <img src="https://img.icons8.com/ios/50/000000/video.png"/>
-                      <form action="/signout" method="POST">
-                        <button className="signOut" type="submit">Sign out</button>
-                      </form>
+                    <img src="https://img.icons8.com/ios/32/000000/logout-rounded--v1.png" alt="" />
+                    <form action="/signout" method="POST">
+                      <button className="signOut" type="submit">Sign out</button>
+                    </form>
                   </li>
                 </ul>
               </div>
@@ -103,7 +100,7 @@ function App() {
                 <div className="row">
                   {args.result.map((item) => (
                     <div className="card-view">
-                      <div className="card-header">      
+                      <div className="card-header">
                         <img src={item.poster_path} alt="" />
                         <div className="card-header-icon">
                           <a href="#">
