@@ -11,14 +11,6 @@ function App() {
   const args = JSON.parse(document.getElementById('data').text);
   return (
     <div className="App">
-      <nav
-        style={{
-          borderBottom: 'solid 1px',
-          paddingBottom: '1rem',
-        }}
-      >
-        <Link to="/detail">Detail</Link>
-      </nav>
       <div className="container p-0">
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <a className="navbar-brand col-sm-3 col-md-2 mr-0">KBAT Movies Review</a>
@@ -37,10 +29,8 @@ function App() {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      <span data-feather="file"></span>
-                      <i className="material-icons">videocam</i> Movies & Shows
-                    </a>
+                      <img src="https://img.icons8.com/ios/50/000000/video.png"/>
+                      <Link to="/detail">Detail</Link>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">
@@ -96,6 +86,7 @@ function App() {
                   </li>
                   <li className="nav-item">
                       <img src="https://img.icons8.com/ios/32/000000/logout-rounded--v1.png" alt="" />
+                      <img src="https://img.icons8.com/ios/50/000000/video.png"/>
                       <form action="/signout" method="POST">
                         <button className="signOut" type="submit">Sign out</button>
                       </form>
