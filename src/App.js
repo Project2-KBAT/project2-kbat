@@ -8,6 +8,15 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title: query }),
+    }).then((response) => response.json()).then((data) => {
+      setMediaEntries(data.results);
+    });
   };
 
   return (
