@@ -5,12 +5,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Detail from "./components/Detail";
+import TopRated from "./components/TopRated";
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/index" element={<App />} />
-      <Route path="/detail" element={<Detail />} />
+      <Route path="/top_rated" element={<TopRated />} />
+      <Route path="/detail/:movieName" element={<Detail />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

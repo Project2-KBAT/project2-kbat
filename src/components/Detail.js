@@ -1,21 +1,22 @@
-/* eslint-disable indent, react/jsx-indent, react/destructuring-assignment, react/jsx-no-bind */
+/* eslint-disable indent, react/jsx-indent, react/destructuring-assignment, react/jsx-no-bind,
+object-curly-newline, no-unused-vars, quotes, react/jsx-one-expression-per-line, spaced-comment */
 import React from 'react';
-import '../style/Detail.css';
+//import '../style/Detail.css';
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import CommentForm from './CommentForm';
 
 function Detail() {
-    function addComment(comment) {
+    const { movieName } = useParams();
+    console.log({ movieName });
+    /*function addComment(comment) {
         setState({
             loading: false,
             comments: [comment, ...state.comments],
         });
-    }
+    } */
     return (
-        <div className="row">
-            <div className="col-4 pt-3 border-right">
-                <h6>Say something about React</h6>
-                <CommentForm addComment={addComment} />
-            </div>
+        <div>
+            Wassup nigga {movieName}
         </div>
     );
 }

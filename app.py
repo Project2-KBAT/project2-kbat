@@ -12,7 +12,7 @@ import flask
 from flask_login import login_user, current_user, LoginManager, logout_user
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from tmdb import get_lyrics_link
+from tmdb import get_popular_movie, get_top_rated_movie
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -72,20 +72,52 @@ db.create_all()
 ### ROUTES ###
 @bp.route("/index")
 def index():
-    (poster_path, title, vote_average) = get_lyrics_link()
-    result = [
-        {"poster_path": poster_path, "title": title, "vote_average": vote_average}
-        for poster_path, title, vote_average in zip(poster_path, title, vote_average)
+    (poster_path, title, vote_average, release_date, popularity) = get_popular_movie()
+    popular_movie = [
+        {
+            "poster_path": poster_path,
+            "title": title,
+            "vote_average": vote_average,
+            "release_date": release_date,
+            "popularity": popularity,
+        }
+        for poster_path, title, vote_average, release_date, popularity in zip(
+            poster_path, title, vote_average, release_date, popularity
+        )
     ]
-    artist_data = {
-        "result": result,
+    popular_movie_data = {
+        "popular_movie": popular_movie,
     }
-    data = json.dumps(artist_data)
-    print(data)
-
+    data = json.dumps(popular_movie_data)
     return flask.render_template(
         "index.html",
         data=data,
+    )
+
+
+@bp.route("/top_rated")
+def top_rated():
+    (poster_path, title, vote_average, release_date, popularity) = get_top_rated_movie()
+    top_rated_movie = [
+        {
+            "poster_path": poster_path,
+            "title": title,
+            "vote_average": vote_average,
+            "release_date": release_date,
+            "popularity": popularity,
+        }
+        for poster_path, title, vote_average, release_date, popularity in zip(
+            poster_path, title, vote_average, release_date, popularity
+        )
+    ]
+    top_rated_movie_data = {
+        "top_rated_movie": top_rated_movie,
+    }
+    data = json.dumps(top_rated_movie_data)
+    print(data)
+    return flask.render_template(
+        "top_rated.html",
+        top_rated_data=data,
     )
 
 
@@ -183,7 +215,7 @@ def save():
     return flask.jsonify({"status": 401, "reason": "Invalid artist ID entered"})
 
 
-if __name__ == "__main__":
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8084)), debug=True
-    )
+app.run(
+    host=os.getenv("IP", "0.0.0.0"),
+    port=int(os.getenv("PORT", 8084)),
+)
