@@ -12,6 +12,7 @@ import flask
 from flask_login import login_user, current_user, LoginManager, logout_user
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from tmdb import get_lyrics_link
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -71,7 +72,21 @@ db.create_all()
 ### ROUTES ###
 @bp.route("/index")
 def index():
-    return flask.render_template("index.html")
+    (poster_path, title, vote_average) = get_lyrics_link()
+    result = [
+        {"poster_path": poster_path, "title": title, "vote_average": vote_average}
+        for poster_path, title, vote_average in zip(poster_path, title, vote_average)
+    ]
+    artist_data = {
+        "result": result,
+    }
+    data = json.dumps(artist_data)
+    print(data)
+
+    return flask.render_template(
+        "index.html",
+        data=data,
+    )
 
 
 app.register_blueprint(bp)
@@ -161,7 +176,14 @@ def main():
     return flask.redirect(flask.url_for("login"))
 
 
+@app.route("/save", methods=["POST"])
+def save():
+    artist_ids = flask.request.json.get("new_artist")
+    print(artist_ids)
+    return flask.jsonify({"status": 401, "reason": "Invalid artist ID entered"})
+
+
 if __name__ == "__main__":
     app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8081)), debug=True
+        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8084)), debug=True
     )
