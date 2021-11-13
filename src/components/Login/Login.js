@@ -61,7 +61,6 @@ class Login extends Component {
           <label>Password</label>
           <input type="password" name="password" placeholder="Password" onChange={this.onChange} />
           <input type="submit" className="button success" value="Login" onClick={this.login} />
-          <a href="/signup">Sign Up</a>
         </div>
       </div>
     );

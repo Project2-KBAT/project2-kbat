@@ -7,7 +7,7 @@ class 404 extends Component {
     return (
       <div id="body">
         <div className="medium-12 columns">
-          <h2>404 Page</h2>
+          <center><h1>Error 404 :( Page Not Found</h1></center>
         </div>
       </div>
     );
