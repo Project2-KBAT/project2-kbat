@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <button> <a href="/" type="button">Home</a></button>
+        <button> <a href="/login" type="button">Login</a></button>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <title>Sign Up Page</title>
+    </head>
+    <body>
+        <h1>Sign Up Page</h1>
+        <form method="POST" action="/signup">
+            <p>Username:</p>
+            <input type="text" name="username"><br>
+            <p>Password:</p>
+            <input type="password" name="password">
+            <input type="submit" value="Become a User of da Site">
+        </form>
+    </body>
+</html>

@@ -1,104 +1,115 @@
-import React from 'react';
+//import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import "./index.css";
+
+import Movie from './components/Movie';
+import Movies from './components/Movie/Movies';
 
 import React, { useState, useRef } from 'react';
 
 function App() {
-  const args = (document.getElementById('data') == null) ? ({
-    artist_ids: [],
-    username: 'John',
-    has_artists_saved: false,
-  }) : JSON.parse(document.getElementById('data').text);
-  const [artists, updateArtists] = useState(args.artist_ids);
-  const form = useRef(null);
+    const [movies, setMovies] = useState([]);
 
-  function onClickAdd() {
-    const val = form.current.value;
-    const updatedArtists = [...artists, val];
-    updateArtists(updatedArtists);
-    form.current.value = '';
-  }
+    useEffect(() => {
+        fetch('movies').then(response =>
+            response.json().then(data => {
+                setMovies(data.movies)
+                //console.log(data);   [REPLACE WITH LINE ABOVE]
+            })
+        );
+    }, []);
 
-  function onClickDelete(i) {
-    const updatedArtists = [...artists.slice(0, i), ...artists.slice(i + 1)];
-    updateArtists(updatedArtists);
-  }
-
-  function onClickSave() {
-    const requestData = { artist_ids: artists };
-    fetch('/save', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        updateArtists(data.artist_ids);
-      });
-  }
-
-  const deleteButtonStyle = {
-    backgroundColor: 'red',
-    border: 'none',
-    color: 'white',
-    padding: '15px 32px',
-    textAlign: 'center',
-    textDecoration: 'none',
-    display: 'inline-block',
-    fontSize: '16px',
-  };
-
-  const gridStyle = {
-    align: 'center',
-    display: 'grid',
-    gridTemplateColumns: '2fr 1fr',
-    gridGap: '10px 5px',
-    marginLeft: '30%',
-    marginRight: '30%',
-  };
-
-  const artistsList = artists.map((artistID, i) => (
-    <div style={gridStyle}>
-      <p>{artistID}</p>
-      <button type="button" style={deleteButtonStyle} onClick={() => onClickDelete(i)}>Delete</button>
+    const moves = ['1', '2', '3'];
+    return <div>
+        <div className="App">
+            <Container style={{ marginTop: 40 }}>
+                <MovieForm />
+                <Movie moves={moves} />
+                <Movie />
+            </Container>
+        </div>
+        {moves.map(moves => (
+            <Movie />
+        ))}
     </div>
-  ));
 
-  return (
-    <div>
-      <h1>
-        {args.username}
-        &apos;s Song Explorer
-      </h1>
-      {args.has_artists_saved ? (
-        <>
-          <h2>{args.song_name}</h2>
-          <h3>{args.song_artist}</h3>
-          <div>
-            <img alt="" src={args.song_image_url} width={300} height={300} />
-          </div>
-          <div>
-            <audio controls>
-              <source src={args.preview_url} />
-            </audio>
-          </div>
-          <a href={args.genius_url}> Click here to see lyrics! </a>
-
-        </>
-      ) : (
-        <h2>Looks like you don&apos;t have anything saved! Use the form below!</h2>
-      )}
-      <h1>Your saved artists:</h1>
-      {artistsList}
-      <h1>Save a favorite artist ID for later:</h1>
-      <input type="text" ref={form} data-testid="text_input" />
-      <button type="button" onClick={onClickAdd}>Add Artist</button>
-      <button type="button" onClick={onClickSave}>Save</button>
-    </div>
-  );
+    /** 
+      const APIURL =
+        "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1";
+    const IMGPATH = "https://image.tmdb.org/t/p/w1280";
+    const SEARCHAPI =
+        "https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=";
+    
+    const main = document.getElementById("main");
+    const form = document.getElementById("form");
+    const search = document.getElementById("search");
+    
+    // initially get fav movies
+    getMovies(APIURL);
+    
+    async function getMovies(url) {
+        const resp = await fetch(url);
+        const respData = await resp.json();
+    
+        console.log(respData);
+    
+        showMovies(respData.results);
+    }
+    
+    function showMovies(movies) {
+        // clear main
+        main.innerHTML = "";
+    
+        movies.forEach((movie) => {
+            const { poster_path, title, vote_average, overview } = movie;
+    
+            const movieEl = document.createElement("div");
+            movieEl.classList.add("movie");
+    
+            movieEl.innerHTML = `
+                <img
+                    src="${IMGPATH + poster_path}"
+                    alt="${title}"
+                />
+                <div class="movie-info">
+                    <h3>${title}</h3>
+                    <span class="${getClassByRate(
+                        vote_average
+                    )}">${vote_average}</span>
+                </div>
+                <div class="overview">
+                    <h3>Overview:</h3>
+                    ${overview}
+                </div>
+            `;
+    
+            main.appendChild(movieEl);
+        });
+    }
+    
+    function getClassByRate(vote) {
+        if (vote >= 8) {
+            return "green";
+        } else if (vote >= 5) {
+            return "orange";
+        } else {
+            return "red";
+        }
+    }
+    
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+    
+        const searchTerm = search.value;
+    
+        if (searchTerm) {
+            getMovies(SEARCHAPI + searchTerm);
+    
+            search.value = "";
+        }
+        
+    });
+    */
 }
-
 export default App;

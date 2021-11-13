@@ -1,0 +1,28 @@
+body{
+    color: #444444;
+}
+#Body{
+    min-height: 550px;
+}
+.primary{
+    background: #06aadb !important;
+}
+.secondery{
+    background: #5b67e7 !important;
+    color:#ffffff !important;
+}
+.left{
+    float:left !important;
+}
+input{
+    color:#646262 !important;
+    border-radius:5px !important;
+}
+button{
+  border-radius:5px !important;
+  right: 0;
+  float: right;
+}
+
+  
+  

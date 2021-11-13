@@ -1,5 +1,253 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #22254b;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+}
+
+header {
+    background-color: #373b69;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.search {
+    background-color: transparent;
+    border: 2px solid #22254b;
+    border-radius: 50px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.search::placeholder {
+    color: #7378c5;
+}
+
+.search:focus {
+    background-color: #22254b;
+    outline: none;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.movie {
+    background-color: #373b69;
+    border-radius: 3px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+    margin: 1rem;
+    width: 300px;
+}
+
+.movie img {
+    width: 100%;
+}
+
+.movie-info {
+    color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 1rem;
+    letter-spacing: 0.5px;
+}
+
+.movie-info h3 {
+    margin: 0;
+}
+
+.movie-info span {
+    background-color: #22254b;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+}
+.movie-info span.green {
+    color: rgb(39, 189, 39);
+}
+
+.movie-info span.orange {
+    color: orange;
+}
+
+.movie-info span.red {
+    color: rgb(189, 42, 42);
+}
+
+.overview {
+    background-color: #fff;
+    padding: 2rem;
+    position: absolute;
+    max-height: 100%;
+    overflow: auto;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateY(101%);
+    transition: transform 0.3s ease-in;
+}
+
+.overview h3 {
+    margin-top: 0;
+}
+
+.movie:hover .overview {
+    transform: translateY(0);
+}
+
 .App {
   text-align: center;
+}
+
+* { 
+  box-sizing: border-box;
+  list-style:none;
+  max-width:100%;
+
+}
+ul {
+  padding:0;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+}
+@form {
+  background:$black;
+  padding:5px;
+}
+
+input[type=search] { 
+  color: black;  
+  text-align: left;
+  cursor: pointer;
+  display: inline-block; 
+  letter-spacing: 4px;             
+  word-spacing: 20px; 
+ 
+}
+.container {
+  width:800px;
+  margin:0 auto;
+  position:relative;
+}
+
+.films {
+  display:grid;
+  grid-template-columns: 23% 23% 23% 23%;
+  grid-gap: 2.6%;
+  cursor:pointer;
+}
+  .title {
+    font-size: 18px;
+    
+}
+.selectedFilm__poster {
+  width:200px;
+}
+.selectedFilm__img {
+  width:40%;
+}
+.selectedFilm__content{
+  width:59%;
+}
+.selectedFilm div {
+  display:inline-block;
+  vertical-align:top;
+  padding:20px;
+}
+.selectedFilm {
+    width: 750px;
+    margin: 0 auto;
+    position: fixed;
+    background: white;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  z-index:2;
+  border-radius:5px;
+}
+p {
+  font-size:13px;
+}
+.selectedFilm__backdrop {
+  position: absolute;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%, -50%);
+  display:none;
+}
+.bg {
+    display:none;
+    background: $black;
+    z-index: 1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+.fa-times {
+  position:absolute;
+  right:10px;
+  top:10px;
+  font-size:20px;
+  cursor:pointer;
+}
+.favImg {
+width:100%;
+}
+.view-fav {
+    color: gold;
+    right: 5px;
+    padding: 5px;
+    z-index: 5;
+    position: absolute;
+}
+.favourite {
+    position: absolute;
+    background: $black;
+    width: 20%;
+
+    right:0;
+    top:35px;
+    z-index:2;
+    display:none;
+  
+  img {
+        padding: 10px;
+  }
+}
+.add-fav {
+  display:inline-block;
+  background:$black;
+  color:#fff;
+  letter-spacing:px;
+  padding:5px 10px;
+  cursor:pointer;
+  font-size:14px;
+ 
+  &:hover .fa {
+    color:gold;
+  }
+  .fa {
+    margin-left:5px;
+    transition: .3s all;
+  }
+}
+.favourite__close {
+  color:#fff;
 }
 
 .App-logo {
