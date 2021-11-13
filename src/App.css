@@ -60,12 +60,7 @@ ul {
   list-style-type: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-p {
+h1, h2, h3, h4, h5, p {
   font-weight: 400;
 }
 
@@ -182,8 +177,7 @@ a:hover {
   margin: 0;
 }
 
-.card-movie-content-head,
-.card-movie-info {
+.card-movie-content-head, .card-movie-info {
   display: table;
   width: 100%;
 }

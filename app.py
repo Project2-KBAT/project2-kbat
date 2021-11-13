@@ -12,7 +12,7 @@ import flask
 from flask_login import login_user, current_user, LoginManager, logout_user
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from tmdb import get_popular_movie, get_top_rated_movie
+from tmdb import get_popular_movie, get_top_rated_movie, get_detail_movie
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -55,15 +55,16 @@ class User(UserMixin, db.Model):
         return self.email
 
 
-class Artist(db.Model):
+class Rating(db.Model):
     """ """
 
     id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.String(80), nullable=False)
-    username = db.Column(db.String(80), nullable=False)
+    user_id = db.Column(db.String(80), nullable=False)
+    movie_id = db.Column(db.String(80), nullable=False)
+    rating = db.Column(db.Integer)
 
     def __repr__(self):
-        return f"<Artist {self.artist_id}>"
+        return f"<Rating {self.rating}>"
 
 
 db.create_all()
@@ -72,17 +73,25 @@ db.create_all()
 ### ROUTES ###
 @bp.route("/index")
 def index():
-    (poster_path, title, vote_average, release_date, popularity) = get_popular_movie()
+    (
+        id_movie,
+        poster_path,
+        title,
+        vote_average,
+        release_date,
+        popularity,
+    ) = get_popular_movie()
     popular_movie = [
         {
+            "id_movie": id_movie,
             "poster_path": poster_path,
             "title": title,
             "vote_average": vote_average,
             "release_date": release_date,
             "popularity": popularity,
         }
-        for poster_path, title, vote_average, release_date, popularity in zip(
-            poster_path, title, vote_average, release_date, popularity
+        for id_movie, poster_path, title, vote_average, release_date, popularity in zip(
+            id_movie, poster_path, title, vote_average, release_date, popularity
         )
     ]
 
@@ -199,14 +208,38 @@ def main():
     return flask.redirect(flask.url_for("login"))
 
 
-@app.route("/save", methods=["POST"])
-def save():
-    artist_ids = flask.request.json.get("new_artist")
-    print(artist_ids)
-    return flask.jsonify({"status": 401, "reason": "Invalid artist ID entered"})
+@app.route("/detail", methods=["POST"])
+def detail():
+    """
+    Get artist_id from input text, check if this artist_id is valid or not.
+    If invalid, it won't be saved to the database. Otherwise, check its existence in the database.
+    If it already exists in the database, save it. Otherwise, don't save it.
+    """
+    id_movie = flask.request.json.get("id_movie")
+    (
+        poster_path,
+        title,
+        release_date,
+        runtime,
+        genres,
+        overview,
+        homepage,
+    ) = get_detail_movie(id_movie)
+    detail_movie = {
+        "poster_path": poster_path,
+        "title": title,
+        "release_date": release_date,
+        "runtime": runtime,
+        "genres": genres,
+        "overview": overview,
+        "homepage": homepage,
+    }
+    data = json.dumps(detail_movie)
+    print(data)
+    return flask.jsonify({"status": 200, "detail": data})
 
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
-    port=int(os.getenv("PORT", 8084)),
+    port=int(os.getenv("PORT", 8085)),
 )

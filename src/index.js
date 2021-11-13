@@ -12,7 +12,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/index" element={<App />} />
       <Route path="/top_rated" element={<TopRated />} />
-      <Route path="/detail/:movieName" element={<Detail />} />
+      <Route path="/detail/:movieID" element={<Detail />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
