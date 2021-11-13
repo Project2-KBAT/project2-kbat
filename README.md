@@ -9,5 +9,9 @@ Handle API Requests using the following:
 
 # Mockups
 
-![Welcome Page](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/welcome-page.png)
-![Main Page](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/main-page.png)
+![Welcome Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/welcome-page.png)
+![Welcome Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Welcome%20Page.png)
+![Login Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Login.png)
+![Sign Up Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Signup.png)
+![Main Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/main-page.png)
+
