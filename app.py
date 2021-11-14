@@ -1,4 +1,7 @@
+# pylint: disable = E1101, C0413, W1508, R0903, W0603, E0401
+
 import flask
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_login import login_user, logout_user, current_user, LoginManager
 from flask_login.utils import login_required
@@ -9,18 +12,20 @@ import os
 import json
 import secrets
 import psycopg2
+from mdb import api_search, get_popular_movie, get_top_rated_movie, get_detail_movie
 from dotenv import load_dotenv, find_dotenv
 from flask_login import UserMixin
-from genius import get_lyrics_link
-from spotify import get_access_token, get_song_data
 
 
 load_dotenv(find_dotenv())
 
 
-from flask_sqlalchemy import SQLAlchemy
-
 app = flask.Flask(__name__, static_folder="./build/static")
+# This tells our Flask app to look at the results of `npm build` instead of the
+# actual files in /templates when we're looking for the index page file. This allows
+# us to load React code into a webpage. Look up create-react-app for more reading on
+# why this is necessary.
+bp = flask.Blueprint("bp", __name__, template_folder="./build")
 # Point SQLAlchemy to your Heroku database
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
@@ -28,46 +33,94 @@ if db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 # Gets rid of a warning
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.secret_key = secrets.token_hex(16)
+app.secret_key = b"I am a secret key!"  # don't defraud my app ok?
 
 
+##### MODELS #####
 db = SQLAlchemy(app)
 
 
 class User(UserMixin, db.Model):
+    """
+    Initialize User model to store the registered user.
+    """
+
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
+    email = db.Column(db.String(120))
+    password = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"<User {self.email}>"
 
     def get_username(self):
-        return self.username
+        """ """
+        return self.email
 
 
-class Artist(db.Model):
+class Rating(db.Model):
+    """ """
+
     id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.String(80), nullable=False)
-    username = db.Column(db.String(80), nullable=False)
+    user_id = db.Column(db.String(80), nullable=False)
+    movie_id = db.Column(db.String(80), nullable=False)
+    rating = db.Column(db.Integer)
 
     def __repr__(self):
-        return f"<Artist {self.artist_id}>"
+        return f"<Rating {self.rating}>"
 
 
 db.create_all()
 
-# This tells our Flask app to look at the results of `npm build` instead of the
-# actual files in /templates when we're looking for the index page file. This allows
-# us to load React code into a webpage. Look up create-react-app for more reading on
-# why this is necessary.
-bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
-
-@bp.route("/main")
-@login_required
+### ROUTES ###
+@bp.route("/index")
 def index():
-    # TODO: insert the data fetched by your app main page here as a JSON
-    return flask.render_template("index.html")
+    (
+        id_movie,
+        poster_path,
+        title,
+        vote_average,
+        release_date,
+        popularity,
+    ) = get_popular_movie()
+    popular_movie = [
+        {
+            "id_movie": id_movie,
+            "poster_path": poster_path,
+            "title": title,
+            "vote_average": vote_average,
+            "release_date": release_date,
+            "popularity": popularity,
+        }
+        for id_movie, poster_path, title, vote_average, release_date, popularity in zip(
+            id_movie, poster_path, title, vote_average, release_date, popularity
+        )
+    ]
+
+    (poster_path, title, vote_average, release_date, popularity) = get_top_rated_movie()
+    top_rated_movie = [
+        {
+            "poster_path": poster_path,
+            "title": title,
+            "vote_average": vote_average,
+            "release_date": release_date,
+            "popularity": popularity,
+        }
+        for poster_path, title, vote_average, release_date, popularity in zip(
+            poster_path, title, vote_average, release_date, popularity
+        )
+    ]
+
+    movie_data = {
+        "popular_movie": popular_movie,
+        "top_rated_movie": top_rated_movie,
+    }
+    data = json.dumps(movie_data)
+
+    return flask.render_template(
+        "index.html",
+        data=data,
+    )
 
 
 app.register_blueprint(bp)
@@ -79,28 +132,44 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_name):
+    """
+    Load user given an id.
+    """
     return User.query.get(user_name)
+
+
+@app.route("/signout", methods=["POST"])
+def logout():
+    """
+    Log out of the current account and return to the login page.
+    """
+    logout_user()
+    return flask.redirect(flask.url_for("login"))
 
 
 @app.route("/signup")
 def signup():
+    """
+    Render a signup page.
+    """
     return flask.render_template("signup.html")
-
-
-@app.route("/increment", methods=["POST"])
-def increment():
-    num_clicks = flask.request.json.get("num_clicks")
-    return flask.jsonify({"num_clicks_server": num_clicks + 1})
 
 
 @app.route("/signup", methods=["POST"])
 def signup_post():
-    username = flask.request.form.get("username")
-    user = User.query.filter_by(username=username).first()
+    """
+    Get username from input text, check if this username is registered or not.
+    If registered, do not allow that username to be saved to the database.
+    Otherwise, allow that username to be saved to the database.
+    Finally, it will go to the login page.
+    """
+    email = flask.request.form.get("email")
+    password = flask.request.form.get("password")
+    user = User.query.filter_by(email=email).first()
     if user:
         pass
     else:
-        user = User(username=username)
+        user = User(email=email, password=password)
         db.session.add(user)
         db.session.commit()
 
@@ -109,102 +178,68 @@ def signup_post():
 
 @app.route("/login")
 def login():
+    """
+    Render a login page.
+    """
     return flask.render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login_post():
-    username = flask.request.form.get("username")
-    user = User.query.filter_by(username=username).first()
-    if user:
+    """
+    Get username from input text, check if this username is registered or not.
+    If registered, it will go to the index page. Otherwise, show error message.
+    """
+    email = flask.request.form.get("email")
+    password = flask.request.form.get("password")
+    user = User.query.filter_by(email=email).first()
+    if user and (user.password == password):
         login_user(user)
-        return render_template("success.html")
-
-    else:
-        return render_template("wrong_combo.html")  # if the username or password
-
-
-# Step -6(creating route for logging out)
-@login_required
-@app.route("/logout")
-def logout():
-    logout_user()
-    if session.get("was_once_logged_in"):
-        # prevent flashing automatically logged out message
-        del session["was_once_logged_in"]
-    flask.flash("You have successfully logged yourself out.")
-    return redirect("/login")
-
-
-@app.route("/save", methods=["POST"])
-def save():
-    artist_id = flask.request.form.get("artist_id")
-    try:
-        access_token = get_access_token()
-        get_song_data(artist_id, access_token)
-    except Exception:
-        flask.flash("Invalid Artist ID input")
         return flask.redirect(flask.url_for("bp.index"))
-
-    username = current_user.username
-    db.session.add(Artist(artist_id=artist_id, username=username))
-    db.session.commit()
-    return flask.redirect(flask.url_for("bp.index"))
+    return flask.jsonify({"status": 401, "reason": "Username or Password Error"})
 
 
 @app.route("/")
-def home():
+def main():
+    """
+    If the user has logged in before, it will go to the index page.
+    Otherwise, it will stay at the login page.
+    """
     if current_user.is_authenticated:
-        return flask.redirect(flask.url_for("bp.main"))
-    return render_template("welcome.html")
+        return flask.redirect(flask.url_for("bp.index"))
+    return flask.redirect(flask.url_for("login"))
 
 
-"""
-@app.route("/index")
-@login_required
-def index():
-    artists = Artist.query.filter_by(username=current_user.username).all()
-    artist_ids = [a.artist_id for a in artists]
-    has_artists_saved = len(artist_ids) > 0
-    if has_artists_saved:
-        artist_id = random.choice(artist_ids)
-        # API calls
-        access_token = get_access_token()
-        (
-            song_album,
-            song_name,
-            song_artist,
-            song_image_url,
-            preview_url,
-        ) = get_song_data(artist_id, access_token)
-        genius_url = get_lyrics_link(song_name)
-    else:
-        (
-            song_album,
-            song_name,
-            song_artist,
-            song_image_url,
-            preview_url,
-            genius_url,
-        ) = (
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
-    return flask.render_template(
-        "index.html",
-        has_artists_saved=has_artists_saved,
-        song_album=song_album,
-        song_name=song_name,
-        song_artist=song_artist,
-        song_image_url=song_image_url,
-        preview_url=preview_url,
-        genius_url=genius_url,
-    )
-"""
+@app.route("/detail", methods=["POST"])
+def detail():
+    """
+    Get artist_id from input text, check if this artist_id is valid or not.
+    If invalid, it won't be saved to the database. Otherwise, check its existence in the database.
+    If it already exists in the database, save it. Otherwise, don't save it.
+    """
+    id_movie = flask.request.json.get("id_movie")
+    (
+        poster_path,
+        title,
+        release_date,
+        runtime,
+        genres,
+        overview,
+        homepage,
+    ) = get_detail_movie(id_movie)
+    detail_movie = {
+        "poster_path": poster_path,
+        "title": title,
+        "release_date": release_date,
+        "runtime": runtime,
+        "genres": genres,
+        "overview": overview,
+        "homepage": homepage,
+    }
+    data = json.dumps(detail_movie)
+    print(data)
+    return flask.jsonify({"status": 200, "detail": data})
+
 
 if __name__ == "__main__":
     app.run(

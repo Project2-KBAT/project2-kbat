@@ -47,6 +47,22 @@ function App {
 */
 function App {
 
+    const [query, setQuery] = useState('');
+    const [mediaEntries, setMediaEntries] = useState([]);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        fetch('/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: query }),
+        }).then((response) => response.json()).then((data) => {
+            setMediaEntries(data.results);
+        });
+    };
+
     constructor() {
         super();
         this.state = {
@@ -57,13 +73,25 @@ function App {
 
     render() {
         return (
+
             <div className="off-canvas-wrapper">
                 <div className="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-
+                    <>
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                placeholder="Search..."
+                                type="search"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                        </form>
+                        <body>
+                            {mediaEntries.map((e) => <MediaEntry title={e.title} name={e.name} pp={e.poster_path} />)}
+                        </body>
+                    </>
 
 
                     <div className="off-canvas-content" data-off-canvas-content>
-                        <MobileHeader name={this.state.appName} />
                         <Header name={this.state.appName} />
                         <Routes name={this.state.appName} />
                         <hr />
@@ -71,6 +99,7 @@ function App {
                     </div>
                 </div>
             </div>
+
         );
     }
 }
