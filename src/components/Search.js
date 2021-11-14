@@ -1,15 +1,27 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './bootstrap.min.css';
-import './App.css';
-import SearchBar from './components/SearchBar';
-import NavigationMenu from './components/NavigationMenu';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import SearchBar from './SearchBar';
+import NavigationMenu from './NavigationMenu';
 
-function App() {
-  const args = JSON.parse(document.getElementById('data').text);
+function Search() {
+  const { movieName } = useParams();
+  const [searchMovie, setSearchMovie] = useState([]);
+
+  useEffect(() => {
+    fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ movie_name: movieName }),
+    }).then((response) => response.json()).then((data) => {
+      const result = JSON.parse(data.search);
+      setSearchMovie(result.search_movie);
+    });
+  }, []);
 
   return (
-    <div className="App">
+    <div className="Search">
       <div className="container p-0">
         <SearchBar />
 
@@ -19,10 +31,10 @@ function App() {
             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 movie_list">
               <div className="pt-8 pb-2 mb-3 border-bottom">
                 <div className="row">
-                  <h1>Popular Movies</h1>
+                  <h1>Search Movies</h1>
                 </div>
                 <div className="row">
-                  {args.popular_movie.map((item) => (
+                  {searchMovie.map((item) => (
                     <div className="card-view">
                       <div className="card-header">
                         <Link to={`/detail/${item.id_movie}`}><img src={item.poster_path} alt="" /></Link>
@@ -58,4 +70,4 @@ function App() {
   );
 }
 
-export default App;
+export default Search;

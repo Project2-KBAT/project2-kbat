@@ -12,7 +12,12 @@ import flask
 from flask_login import login_user, current_user, LoginManager, logout_user
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from tmdb import get_popular_movie, get_top_rated_movie, get_detail_movie
+from tmdb import (
+    get_popular_movie,
+    get_top_rated_movie,
+    get_detail_movie,
+    get_search_movie,
+)
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -215,7 +220,7 @@ def detail():
     If invalid, it won't be saved to the database. Otherwise, check its existence in the database.
     If it already exists in the database, save it. Otherwise, don't save it.
     """
-    id_movie = flask.request.json.get("id_movie")
+    movie_id = flask.request.json.get("movie_id")
     (
         poster_path,
         title,
@@ -224,7 +229,7 @@ def detail():
         genres,
         overview,
         homepage,
-    ) = get_detail_movie(id_movie)
+    ) = get_detail_movie(movie_id)
     detail_movie = {
         "poster_path": poster_path,
         "title": title,
@@ -237,6 +242,44 @@ def detail():
     data = json.dumps(detail_movie)
     print(data)
     return flask.jsonify({"status": 200, "detail": data})
+
+
+@app.route("/search", methods=["POST"])
+def search():
+    """
+    Get artist_id from input text, check if this artist_id is valid or not.
+    If invalid, it won't be saved to the database. Otherwise, check its existence in the database.
+    If it already exists in the database, save it. Otherwise, don't save it.
+    """
+    movie_name = flask.request.json.get("movie_name")
+    (
+        id_movie,
+        poster_path,
+        title,
+        vote_average,
+        release_date,
+        popularity,
+    ) = get_search_movie(movie_name)
+    search_movie = [
+        {
+            "id_movie": id_movie,
+            "poster_path": poster_path,
+            "title": title,
+            "vote_average": vote_average,
+            "release_date": release_date,
+            "popularity": popularity,
+        }
+        for id_movie, poster_path, title, vote_average, release_date, popularity in zip(
+            id_movie, poster_path, title, vote_average, release_date, popularity
+        )
+    ]
+
+    movie_data = {
+        "search_movie": search_movie,
+    }
+    data = json.dumps(movie_data)
+
+    return flask.jsonify({"status": 200, "search": data})
 
 
 app.run(

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import App from './App';
 import TopRated from "./components/TopRated";
+import Search from './components/Search';
 import Detail from "./components/Detail";
 import reportWebVitals from './reportWebVitals';
 
@@ -12,6 +13,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/index" element={<App />} />
       <Route path="/top_rated" element={<TopRated />} />
+      <Route path="/search/:movieName" element={<Search />} />
       <Route path="/detail/:movieID" element={<Detail />} />
     </Routes>
   </BrowserRouter>,

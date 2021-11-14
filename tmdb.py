@@ -27,7 +27,7 @@ def get_popular_movie():
     release_date = []
     popularity = []
 
-    for i in range(20):
+    for i in range(len(tmdb_response_json["results"])):
         id_movie.append(tmdb_response_json["results"][i]["id"])
         poster_path.append(
             "".join([URL_IMAGE, tmdb_response_json["results"][i]["poster_path"]])
@@ -56,7 +56,7 @@ def get_top_rated_movie():
     release_date = []
     popularity = []
 
-    for i in range(20):
+    for i in range(len(tmdb_response_json["results"])):
         poster_path.append(
             "".join([URL_IMAGE, tmdb_response_json["results"][i]["poster_path"]])
         )
@@ -67,13 +67,13 @@ def get_top_rated_movie():
     return (poster_path, title, vote_average, release_date, popularity)
 
 
-def get_detail_movie(id_movie):
+def get_detail_movie(movie_id):
     """
     abc
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/movie/"
-        + id_movie
+        + movie_id
         + "?api_key="
         + os.getenv("API_KEY")
         + "&language=en-US",
@@ -93,3 +93,40 @@ def get_detail_movie(id_movie):
     homepage = tmdb_response_json["homepage"]
 
     return (poster_path, title, release_date, runtime, genres, overview, homepage)
+
+
+def get_search_movie(movie_name):
+    """
+    abc
+    """
+    tmdb_response = requests.get(
+        "https://api.themoviedb.org/3/search/movie?api_key="
+        + os.getenv("API_KEY")
+        + "&language=en-US&query="
+        + movie_name
+        + "&page=1&include_adult=false",
+    )
+    tmdb_response_json = tmdb_response.json()
+
+    id_movie = []
+    poster_path = []
+    title = []
+    vote_average = []
+    release_date = []
+    popularity = []
+
+    for i in range(len(tmdb_response_json["results"])):
+        id_movie.append(tmdb_response_json["results"][i]["id"])
+        if tmdb_response_json["results"][i]["poster_path"] is None:
+            poster_path.append(
+                "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg"
+            )
+        else:
+            poster_path.append(
+                "".join([URL_IMAGE, tmdb_response_json["results"][i]["poster_path"]])
+            )
+        title.append(tmdb_response_json["results"][i]["title"])
+        vote_average.append(tmdb_response_json["results"][i]["vote_average"])
+        release_date.append(tmdb_response_json["results"][i]["release_date"])
+        popularity.append(tmdb_response_json["results"][i]["popularity"])
+    return (id_movie, poster_path, title, vote_average, release_date, popularity)
