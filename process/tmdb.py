@@ -1,12 +1,14 @@
-# pylint: disable = E0401
-
 """
-Provides a function to get data from themoviedb.
+Provides many functions to get data from TheMovieDB.
 """
 import os
 import requests
 
 URL_IMAGE = "https://www.themoviedb.org/t/p/w185_and_h278_multi_faces"
+URL_NO_IMAGE = (
+    "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-"
+    "picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg"
+)
 
 
 def get_popular_movie():
@@ -69,7 +71,7 @@ def get_top_rated_movie():
 
 def get_detail_movie(movie_id):
     """
-    abc
+    Get details of each movie from the TheMovieDB.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/movie/"
@@ -97,7 +99,7 @@ def get_detail_movie(movie_id):
 
 def get_search_movie(movie_name):
     """
-    abc
+    Search for movies that are related to the keywords the user searches for from the TheDBMovie.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/search/movie?api_key="
@@ -108,6 +110,7 @@ def get_search_movie(movie_name):
     )
     tmdb_response_json = tmdb_response.json()
 
+    exist_search_movie = len(tmdb_response_json["results"]) > 0
     id_movie = []
     poster_path = []
     title = []
@@ -118,9 +121,7 @@ def get_search_movie(movie_name):
     for i in range(len(tmdb_response_json["results"])):
         id_movie.append(tmdb_response_json["results"][i]["id"])
         if tmdb_response_json["results"][i]["poster_path"] is None:
-            poster_path.append(
-                "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg"
-            )
+            poster_path.append(URL_NO_IMAGE)
         else:
             poster_path.append(
                 "".join([URL_IMAGE, tmdb_response_json["results"][i]["poster_path"]])
@@ -129,4 +130,12 @@ def get_search_movie(movie_name):
         vote_average.append(tmdb_response_json["results"][i]["vote_average"])
         release_date.append(tmdb_response_json["results"][i]["release_date"])
         popularity.append(tmdb_response_json["results"][i]["popularity"])
-    return (id_movie, poster_path, title, vote_average, release_date, popularity)
+    return (
+        exist_search_movie,
+        id_movie,
+        poster_path,
+        title,
+        vote_average,
+        release_date,
+        popularity,
+    )

@@ -37,6 +37,7 @@ function Detail() {
                 <h4>{detailMovie.release_date}</h4>
                 <span className="minutes">
                   {detailMovie.runtime}
+                  {' '}
                   min
                 </span>
                 <p className="type">{detailMovie.genres}</p>

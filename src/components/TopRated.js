@@ -6,6 +6,7 @@ import NavigationMenu from './NavigationMenu';
 
 function TopRated() {
   const args = JSON.parse(document.getElementById('data').text);
+
   return (
     <div className="App">
       <div className="container p-0">
@@ -25,7 +26,7 @@ function TopRated() {
                   {args.top_rated_movie.map((item) => (
                     <div className="card-view">
                       <div className="card-header">
-                        <Link to={`/detail/${item.title}`}><img src={item.poster_path} alt="" /></Link>
+                        <Link to={`/detail/${item.id_movie}`}><img src={item.poster_path} alt="" /></Link>
                       </div>
                       <div className="card-movie-content">
                         <div className="card-movie-content-head">
