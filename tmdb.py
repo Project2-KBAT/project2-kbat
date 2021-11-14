@@ -8,6 +8,7 @@ API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.themoviedb.org/3"
 
 
+# removes all person results from a given response (the search endpoint used queries movies, tv shows, AND people)
 def remove_people(response_json):
     for result in response_json["results"]:
         if result["media_type"] == "person":
