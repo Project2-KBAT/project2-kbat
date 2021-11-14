@@ -1,27 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import { React, useState } from 'react';
+import MediaEntry from './components/MediaEntry';
 import './App.css';
 
 function App() {
+  const [query, setQuery] = useState('');
+  const [mediaEntries, setMediaEntries] = useState([]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title: query }),
+    }).then((response) => response.json()).then((data) => {
+      setMediaEntries(data.results);
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          <code> src/App.js </code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Search..."
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </form>
+      <body>
+        {mediaEntries.map((e) => <MediaEntry title={e.title} name={e.name} pp={e.poster_path} />)}
+      </body>
+    </>
   );
 }
 
