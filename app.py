@@ -4,6 +4,7 @@
 Provides all the functions such as creating a model to store data in the database,
 sign up, sign in, sign out, saving favorite artists according to each user.
 """
+from datetime import date
 import os
 import json
 import random
@@ -53,16 +54,16 @@ class User(UserMixin, db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True)
-    fullname = db.Column(db.String(100))
+    username = db.Column(db.String(100))
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"<User {self.fullname}>"
+        return f"<User {self.username}>"
 
     def get_username(self):
         """ """
-        return self.fullname
+        return self.username
 
 
 class Rating(db.Model):
@@ -81,9 +82,11 @@ class Comment(db.Model):
     """ """
 
     id = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(120), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     movie_id = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(1000))
+    date = db.Column(db.String(100))
+    hour = db.Column(db.String(100))
 
     def __repr__(self):
         return f"<Rating {self.comment}>"
@@ -183,7 +186,7 @@ def signup_post():
     Otherwise, allow that username to be saved to the database.
     Finally, it will go to the login page.
     """
-    fullname = flask.request.form.get("fullname")
+    username = flask.request.form.get("username")
     email = flask.request.form.get("email")
     password = flask.request.form.get("password")
     user = User.query.filter_by(email=email).first()
@@ -191,7 +194,7 @@ def signup_post():
         pass
     else:
         user = User(
-            fullname=fullname,
+            username=username,
             email=email,
             password=generate_password_hash(password, method="sha256"),
         )
@@ -237,7 +240,7 @@ def main():
 
 @app.route("/detail", methods=["POST"])
 def detail():
-    data = get_detail()
+    data = get_detail(current_user.username)
     return flask.jsonify({"status": 200, "detail": data})
 
 
@@ -249,16 +252,56 @@ def search():
 
 @app.route("/comment", methods=["POST"])
 def comment():
+    username = current_user.username
     movie_id = flask.request.json.get("movie_id")
     comment_movie = flask.request.json.get("comment_movie")
+    date_comment = flask.request.json.get("date")
+    hour_comment = flask.request.json.get("hour")
 
-    email = current_user.email
-    db.session.add(Comment(user_id=email, movie_id=movie_id, comment=comment_movie))
+    db.session.add(
+        Comment(
+            username=username,
+            movie_id=movie_id,
+            comment=comment_movie,
+            date=date_comment,
+            hour=hour_comment,
+        )
+    )
     db.session.commit()
 
-    all_comment = Comment.query.all()
-    print(all_comment)
-    return flask.jsonify({"status": 200, "all_comment": all_comment})
+    return flask.jsonify({"status": 200, "message": "Successful"})
+
+
+@app.route("/all_comment", methods=["POST"])
+def all_comment():
+    movie_id = flask.request.json.get("movie_id")
+
+    query_comment = Comment.query.filter_by(movie_id=movie_id).all()
+
+    name = []
+    comment = []
+    date = []
+    hour = []
+
+    for item in query_comment:
+        name.append(item.username)
+        comment.append(item.comment)
+        date.append(item.date)
+        hour.append(item.hour)
+
+    all_comment = [
+        {
+            "name": name,
+            "date": date,
+            "hour": hour,
+            "comment": comment,
+        }
+        for name, date, hour, comment in zip(name, date, hour, comment)
+    ]
+    comment_data = {"comment": all_comment}
+    data = json.dumps(comment_data)
+
+    return flask.jsonify({"status": 200, "all_comment": data})
 
 
 app.run(

@@ -7,7 +7,7 @@ import flask
 from tmdb import get_detail_movie
 
 
-def get_detail():
+def get_detail(username):
     """
     Based on the id of each movie to get all the information about that movie.
     """
@@ -19,7 +19,6 @@ def get_detail():
         runtime,
         genres,
         overview,
-        homepage,
     ) = get_detail_movie(movie_id)
 
     detail_movie = {
@@ -29,7 +28,7 @@ def get_detail():
         "runtime": runtime,
         "genres": genres,
         "overview": overview,
-        "homepage": homepage,
+        "username": username,
     }
     data = json.dumps(detail_movie)
 

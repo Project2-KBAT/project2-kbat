@@ -92,9 +92,8 @@ def get_detail_movie(movie_id):
         genres_temp.append(i["name"])
     genres = ", ".join(genres_temp)
     overview = tmdb_response_json["overview"]
-    homepage = tmdb_response_json["homepage"]
 
-    return (poster_path, title, release_date, runtime, genres, overview, homepage)
+    return (poster_path, title, release_date, runtime, genres, overview)
 
 
 def get_search_movie(movie_name):
