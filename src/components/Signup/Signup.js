@@ -1,10 +1,14 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable linebreak-style */
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-undef */
 import React, { Component } from 'react';
-import { PostData } from '../../services/PostData';
 import { Redirect } from 'react-router-dom';
 import './Signup.css';
 
 class Signup extends Component {
-
   constructor(props) {
     super(props);
 
@@ -13,24 +17,21 @@ class Signup extends Component {
       password: '',
       email: '',
       name: '',
-      redirectToReferrer: false
+      redirectToReferrer: false,
     };
 
     this.signup = this.signup.bind(this);
     this.onChange = this.onChange.bind(this);
-
   }
-
 
   signup() {
     if (this.state.username && this.state.password && this.state.email && this.state.name) {
       PostData('signup', this.state).then((result) => {
-        let responseJson = result;
+        const responseJson = result;
         if (responseJson.userData) {
           sessionStorage.setItem('userData', JSON.stringify(responseJson));
           this.setState({ redirectToReferrer: true });
         }
-
       });
     }
   }
@@ -41,10 +42,8 @@ class Signup extends Component {
 
   render() {
     if (this.state.redirectToReferrer || sessionStorage.getItem('userData')) {
-      return (<Redirect to={'/home'} />)
+      return (<Redirect to="/home" />);
     }
-
-
 
     return (
 

@@ -1,55 +1,55 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/sort-comp */
+/* eslint-disable no-undef */
+/* eslint-disable linebreak-style */
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable react/jsx-tag-spacing */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+/* eslint-disable linebreak-style */
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { PostData } from '../../services/PostData';
 import './Login.css';
 
 class Login extends Component {
-
   constructor() {
     super();
 
     this.state = {
       username: '',
       password: '',
-      redirectToReferrer: false
+      redirectToReferrer: false,
     };
 
     this.login = this.login.bind(this);
     this.onChange = this.onChange.bind(this);
-
   }
-
-
 
   login() {
     if (this.state.username && this.state.password) {
       PostData('login', this.state).then((result) => {
-        let responseJson = result;
+        const responseJson = result;
         if (responseJson.userData) {
           sessionStorage.setItem('userData', JSON.stringify(responseJson));
           this.setState({ redirectToReferrer: true });
         }
-
       });
     }
-
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-
-
-
   render() {
-
     if (this.state.redirectToReferrer) {
-      return (<Redirect to={'/home'} />)
+      return (<Redirect to="/home" />);
     }
 
     if (sessionStorage.getItem('userData')) {
-      return (<Redirect to={'/home'} />)
+      return (<Redirect to="/home" />);
     }
 
     return (

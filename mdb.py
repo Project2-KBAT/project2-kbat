@@ -116,8 +116,11 @@ def api_search(title):
 Need to Replicate this Search Function in React
 """
 # testing functionality
+
+"""
 search_input = input("Gimme something to search: ")
 load_req = "Loading your search request "  #%s is the variable
 print(load_req + search_input + "...")
 response = api_search(search_input)
 print(response)
+"""

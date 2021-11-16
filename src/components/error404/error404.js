@@ -1,8 +1,10 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 
-import './404.css';
+import './error404.css';
 
-class 404 extends Component {
+class error404 extends Component {
   render() {
     return (
       <div id="body">
@@ -14,4 +16,4 @@ class 404 extends Component {
   }
 }
 
-export default 404;
+export default error404;

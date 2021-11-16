@@ -1,107 +1,62 @@
-//import React from 'react';
-import React, { Component } from 'react';
-import logo from './logo.svg';
+/* eslint-disable no-undef */
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './bootstrap.min.css';
 import './App.css';
-import "./index.css";
+import SearchBar from './components/SearchBar';
+import NavigationMenu from './components/NavigationMenu';
 
-import './styles/main.css';
-import Routes from './routes';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+function App() {
+    const args = JSON.parse(document.getElementById('data').text);
 
-import Movie from './components/Movie';
-import Movies from './components/Movie/Movies';
-
-import React, { useState, useRef } from 'react';
-
-//class App extends Component {
-
-/** 
-function App {
-    const [movies, setMovies] = useState([]);
-
-    useEffect(() => {
-        fetch('movies').then(response =>
-            response.json().then(data => {
-                setMovies(data.movies)
-                //console.log(data);   [REPLACE WITH LINE ABOVE]
-            })
-        );
-    }, []);
-
-    const moves = ['1', '2', '3'];
-    return <div>
+    return (
         <div className="App">
-            <Container style={{ marginTop: 60 }}>
-                <MovieForm />
-                <Movie moves={moves} />
-                <Movie />
-            </Container>
-        </div>
-        {moves.map(moves => (
-            <Movie />
-        ))}
-    </div>
+            <div className="container p-0">
+                <SearchBar />
 
-}
-*/
-function App {
-
-    const [query, setQuery] = useState('');
-    const [mediaEntries, setMediaEntries] = useState([]);
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        fetch('/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title: query }),
-        }).then((response) => response.json()).then((data) => {
-            setMediaEntries(data.results);
-        });
-    };
-
-    constructor() {
-        super();
-        this.state = {
-            appName: "MovieDB App",
-            home: false
-        }
-    }
-
-    render() {
-        return (
-
-            <div className="off-canvas-wrapper">
-                <div className="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-                    <>
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                placeholder="Search..."
-                                type="search"
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                            />
-                        </form>
-                        <body>
-                            {mediaEntries.map((e) => <MediaEntry title={e.title} name={e.name} pp={e.poster_path} />)}
-                        </body>
-                    </>
-
-
-                    <div className="off-canvas-content" data-off-canvas-content>
-                        <Header name={this.state.appName} />
-                        <Routes name={this.state.appName} />
-                        <hr />
-                        <Footer />
+                <div className="container-fluid">
+                    <div className="row">
+                        <NavigationMenu />
+                        <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 movie_list">
+                            <div className="pt-8 pb-2 mb-3 border-bottom">
+                                <div className="row">
+                                    <h1>Popular Movies</h1>
+                                </div>
+                                <div className="row">
+                                    {args.popular_movie.map((item) => (
+                                        <div className="card-view">
+                                            <div className="card-header">
+                                                <Link to={`/detail/${item.id_movie}`}><img src={item.poster_path} alt="" /></Link>
+                                            </div>
+                                            <div className="card-movie-content">
+                                                <div className="card-movie-content-head">
+                                                    <h3 className="card-movie-title">{item.title}</h3>
+                                                    <div className="ratings">
+                                                        <span>{item.vote_average}</span>
+                                                        /10
+                                                    </div>
+                                                </div>
+                                                <div className="card-movie-info">
+                                                    <div className="movie-running-time">
+                                                        <div className="text">Release Date</div>
+                                                        <span>{item.release_date}</span>
+                                                    </div>
+                                                    <div className="movie-running-time">
+                                                        <div className="text">Popularity</div>
+                                                        <span>{item.popularity}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </main>
                     </div>
                 </div>
             </div>
-
-        );
-    }
+        </div>
+    );
 }
 
 export default App;

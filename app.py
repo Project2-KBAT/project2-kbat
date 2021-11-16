@@ -1,24 +1,32 @@
 # pylint: disable = E1101, C0413, W1508, R0903, W0603, E0401
 
-import flask
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request, redirect, session, url_for
-from flask_login import login_user, logout_user, current_user, LoginManager
-from flask_login.utils import login_required
-import random
-import base64
-import requests
+"""
+Provides all the functions such as creating a model to store data in the database,
+sign up, sign in, sign out, saving favorite artists according to each user.
+"""
+from datetime import date
 import os
 import json
-import secrets
-import psycopg2
-from mdb import api_search, get_popular_movie, get_top_rated_movie, get_detail_movie
-from dotenv import load_dotenv, find_dotenv
-from flask_login import UserMixin
+import random
+import flask
+import sys
 
+sys.path.append("./process")
+
+from flask_login import login_user, current_user, LoginManager, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+from tmdb import (
+    get_popular_movie,
+    get_top_rated_movie,
+)
+from detail import get_detail
+from search import get_search
+
+from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
-
 
 app = flask.Flask(__name__, static_folder="./build/static")
 # This tells our Flask app to look at the results of `npm build` instead of the
@@ -46,27 +54,42 @@ class User(UserMixin, db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120))
+    username = db.Column(db.String(100))
+    email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"<User {self.email}>"
+        return f"<User {self.username}>"
 
     def get_username(self):
         """ """
-        return self.email
+        return self.username
 
 
 class Rating(db.Model):
     """ """
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String(80), nullable=False)
-    movie_id = db.Column(db.String(80), nullable=False)
+    user_email = db.Column(db.String(120), nullable=False)
+    movie_id = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Integer)
 
     def __repr__(self):
         return f"<Rating {self.rating}>"
+
+
+class Comment(db.Model):
+    """ """
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    movie_id = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(1000))
+    date = db.Column(db.String(100))
+    hour = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"<Rating {self.comment}>"
 
 
 db.create_all()
@@ -163,13 +186,18 @@ def signup_post():
     Otherwise, allow that username to be saved to the database.
     Finally, it will go to the login page.
     """
+    username = flask.request.form.get("username")
     email = flask.request.form.get("email")
     password = flask.request.form.get("password")
     user = User.query.filter_by(email=email).first()
     if user:
         pass
     else:
-        user = User(email=email, password=password)
+        user = User(
+            username=username,
+            email=email,
+            password=generate_password_hash(password, method="sha256"),
+        )
         db.session.add(user)
         db.session.commit()
 
@@ -193,10 +221,10 @@ def login_post():
     email = flask.request.form.get("email")
     password = flask.request.form.get("password")
     user = User.query.filter_by(email=email).first()
-    if user and (user.password == password):
+    if user and check_password_hash(user.password, password):
         login_user(user)
         return flask.redirect(flask.url_for("bp.index"))
-    return flask.jsonify({"status": 401, "reason": "Username or Password Error"})
+    return flask.render_template("wrong_combo.html")
 
 
 @app.route("/")
@@ -207,41 +235,76 @@ def main():
     """
     if current_user.is_authenticated:
         return flask.redirect(flask.url_for("bp.index"))
-    return flask.redirect(flask.url_for("login"))
+    return flask.render_template("welcome.html")
 
 
 @app.route("/detail", methods=["POST"])
 def detail():
-    """
-    Get artist_id from input text, check if this artist_id is valid or not.
-    If invalid, it won't be saved to the database. Otherwise, check its existence in the database.
-    If it already exists in the database, save it. Otherwise, don't save it.
-    """
-    id_movie = flask.request.json.get("id_movie")
-    (
-        poster_path,
-        title,
-        release_date,
-        runtime,
-        genres,
-        overview,
-        homepage,
-    ) = get_detail_movie(id_movie)
-    detail_movie = {
-        "poster_path": poster_path,
-        "title": title,
-        "release_date": release_date,
-        "runtime": runtime,
-        "genres": genres,
-        "overview": overview,
-        "homepage": homepage,
-    }
-    data = json.dumps(detail_movie)
-    print(data)
+    data = get_detail(current_user.username)
     return flask.jsonify({"status": 200, "detail": data})
 
 
-if __name__ == "__main__":
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 5001)), debug=True
+@app.route("/search", methods=["POST"])
+def search():
+    data = get_search()
+    return flask.jsonify({"status": 200, "search": data})
+
+
+@app.route("/comment", methods=["POST"])
+def comment():
+    username = current_user.username
+    movie_id = flask.request.json.get("movie_id")
+    comment_movie = flask.request.json.get("comment_movie")
+    date_comment = flask.request.json.get("date")
+    hour_comment = flask.request.json.get("hour")
+
+    db.session.add(
+        Comment(
+            username=username,
+            movie_id=movie_id,
+            comment=comment_movie,
+            date=date_comment,
+            hour=hour_comment,
+        )
     )
+    db.session.commit()
+
+    return flask.jsonify({"status": 200, "message": "Successful"})
+
+
+@app.route("/all_comment", methods=["POST"])
+def all_comment():
+    movie_id = flask.request.json.get("movie_id")
+
+    query_comment = Comment.query.filter_by(movie_id=movie_id).all()
+
+    name = []
+    comment = []
+    date = []
+    hour = []
+
+    for item in query_comment:
+        name.append(item.username)
+        comment.append(item.comment)
+        date.append(item.date)
+        hour.append(item.hour)
+
+    all_comment = [
+        {
+            "name": name,
+            "date": date,
+            "hour": hour,
+            "comment": comment,
+        }
+        for name, date, hour, comment in zip(name, date, hour, comment)
+    ]
+    comment_data = {"comment": all_comment}
+    data = json.dumps(comment_data)
+
+    return flask.jsonify({"status": 200, "all_comment": data})
+
+
+app.run(
+    host=os.getenv("IP", "0.0.0.0"),
+    port=int(os.getenv("PORT", 8086)),
+)

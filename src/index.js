@@ -21,9 +21,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Main from "./Main";
+import main from "./styles/main.css";
 
 ReactDOM.render(
-  <Main />,
+  <App />,
   document.getElementById("root")
 );
