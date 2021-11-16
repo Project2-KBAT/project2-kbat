@@ -2,3 +2,5 @@ src/index.js
 src/reportWebVitals.js
 src/setupTests.js
 src/App.test.js
+src/component/RandomMovie.js
+src/App.js

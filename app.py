@@ -7,11 +7,12 @@
 import os
 import flask
 
+
 app = flask.Flask(__name__, static_folder="./build/static")
 bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
 
-@bp.route("/")
+@bp.route("/", methods=["POST", "GET"])
 def main():
     return flask.render_template(
         "index.html",

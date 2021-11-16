@@ -1,28 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+require('dotenv').config();
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import RandomMovie from './component/RandomMovie';
+
+const BASE_URL = 'https://api.themoviedb.org/3/movie/';
+const API_KEY_ = process.env.REACT_APP_API_KEY;
+const movieId = Math.floor((Math.random() * 897398) + 1); //number of movies currently in database
+const API_URL = BASE_URL + movieId + '?api_key=' + API_KEY_ + '&language=en-US';
+
 
 function App() {
+  const [movie, setMovie] = useState({});
+
+  useEffect(() => {
+    fetch(API_URL).then((response) => response.json()).then((data) => {
+      console.log(data);
+      setMovie(data);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          <code> src/App.js </code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      <RandomMovie {...movie} />
     </div>
   );
 }
+
 
 export default App;
