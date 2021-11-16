@@ -27,7 +27,6 @@ function Search() {
       {existMovie ? (
         <div className="container p-0">
           <ToolBar />
-
           <div className="container-fluid">
             <div className="row">
               <NavigationMenu />
@@ -36,7 +35,6 @@ function Search() {
                   <div className="row">
                     <h1>Search Movies</h1>
                   </div>
-
                   <div className="row">
                     {searchMovie.map((item) => (
                       <div className="card-view">
@@ -73,7 +71,6 @@ function Search() {
       ) : (
         <div className="container p-0">
           <ToolBar />
-
           <div className="container-fluid">
             <div className="row">
               <NavigationMenu />

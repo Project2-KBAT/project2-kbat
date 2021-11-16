@@ -6,6 +6,8 @@ import App from './App';
 import TopRated from "./components/TopRated";
 import Search from './components/Search';
 import Detail from "./components/Detail";
+import Contact from './components/Contact';
+import Settings from './components/Settings';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -15,6 +17,8 @@ ReactDOM.render(
       <Route path="/top_rated" element={<TopRated />} />
       <Route path="/search/:movieName" element={<Search />} />
       <Route path="/detail/:movieID" element={<Detail />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

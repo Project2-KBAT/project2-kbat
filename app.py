@@ -1,28 +1,25 @@
-# pylint: disable = E1101, C0413, W1508, R0903, W0603, E0401
+# pylint: disable = C0413, E0401, E1101, W1508
 
 """
 Provides all the functions such as creating a model to store data in the database,
-sign up, sign in, sign out, saving favorite artists according to each user.
+sign up, sign in, sign out, load popular movies / top rated movies, search, detail,
+store comment, load comments, calulate avg rating according to each user.
 """
-from datetime import date
 import os
 import json
-import random
-import flask
 import sys
+import flask
 
 sys.path.append("./process")
 
 from flask_login import login_user, current_user, LoginManager, logout_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from tmdb import (
-    get_popular_movie,
-    get_top_rated_movie,
-)
-from detail import get_detail
+
+from tmdb import get_popular_movie, get_top_rated_movie
 from search import get_search
+from detail import get_detail
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -50,7 +47,7 @@ db = SQLAlchemy(app)
 
 class User(UserMixin, db.Model):
     """
-    Initialize User model to store the registered user.
+    Initialize the User model to store the registered user.
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -62,24 +59,17 @@ class User(UserMixin, db.Model):
         return f"<User {self.username}>"
 
     def get_username(self):
-        """ """
+        """
+        Returns the username value.
+        """
         return self.username
 
 
-class Rating(db.Model):
-    """ """
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(120), nullable=False)
-    movie_id = db.Column(db.Integer, nullable=False)
-    rating = db.Column(db.Integer)
-
-    def __repr__(self):
-        return f"<Rating {self.rating}>"
-
-
 class Comment(db.Model):
-    """ """
+    """
+    Initialize the Comments model to store the comments and ratings that the user
+    has commented and rated.
+    """
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -87,9 +77,16 @@ class Comment(db.Model):
     comment = db.Column(db.String(1000))
     date = db.Column(db.String(100))
     hour = db.Column(db.String(100))
+    rating = db.Column(db.Integer)
 
     def __repr__(self):
         return f"<Rating {self.comment}>"
+
+    def get_rating(self):
+        """
+        Returns the rating value.
+        """
+        return self.rating
 
 
 db.create_all()
@@ -98,6 +95,9 @@ db.create_all()
 ### ROUTES ###
 @bp.route("/index")
 def index():
+    """
+    Get all information about popular movies / top rated movies.
+    """
     (
         id_movie,
         poster_path,
@@ -106,6 +106,7 @@ def index():
         release_date,
         popularity,
     ) = get_popular_movie()
+
     popular_movie = [
         {
             "id_movie": id_movie,
@@ -120,23 +121,33 @@ def index():
         )
     ]
 
-    (poster_path, title, vote_average, release_date, popularity) = get_top_rated_movie()
+    (
+        id_movie,
+        poster_path,
+        title,
+        vote_average,
+        release_date,
+        popularity,
+    ) = get_top_rated_movie()
+
     top_rated_movie = [
         {
+            "id_movie": id_movie,
             "poster_path": poster_path,
             "title": title,
             "vote_average": vote_average,
             "release_date": release_date,
             "popularity": popularity,
         }
-        for poster_path, title, vote_average, release_date, popularity in zip(
-            poster_path, title, vote_average, release_date, popularity
+        for id_movie, poster_path, title, vote_average, release_date, popularity in zip(
+            id_movie, poster_path, title, vote_average, release_date, popularity
         )
     ]
 
     movie_data = {
         "popular_movie": popular_movie,
         "top_rated_movie": top_rated_movie,
+        "username": current_user.username,
     }
     data = json.dumps(movie_data)
 
@@ -215,8 +226,8 @@ def login():
 @app.route("/login", methods=["POST"])
 def login_post():
     """
-    Get username from input text, check if this username is registered or not.
-    If registered, it will go to the index page. Otherwise, show error message.
+    Get email and password from input text, check if this email and this password are registered
+    or not. If registered, it will go to the index page. Otherwise, show error message.
     """
     email = flask.request.form.get("email")
     password = flask.request.form.get("password")
@@ -240,23 +251,33 @@ def main():
 
 @app.route("/detail", methods=["POST"])
 def detail():
+    """
+    Get all details of a movie.
+    """
     data = get_detail(current_user.username)
     return flask.jsonify({"status": 200, "detail": data})
 
 
 @app.route("/search", methods=["POST"])
 def search():
+    """
+    Search for information of a movie through keyword.
+    """
     data = get_search()
     return flask.jsonify({"status": 200, "search": data})
 
 
 @app.route("/comment", methods=["POST"])
-def comment():
+def save_comment():
+    """
+    Store all information of comments that belong to a movie from the database.
+    """
     username = current_user.username
     movie_id = flask.request.json.get("movie_id")
     comment_movie = flask.request.json.get("comment_movie")
     date_comment = flask.request.json.get("date")
     hour_comment = flask.request.json.get("hour")
+    rating = flask.request.json.get("rating")
 
     db.session.add(
         Comment(
@@ -265,6 +286,7 @@ def comment():
             comment=comment_movie,
             date=date_comment,
             hour=hour_comment,
+            rating=rating,
         )
     )
     db.session.commit()
@@ -273,7 +295,10 @@ def comment():
 
 
 @app.route("/all_comment", methods=["POST"])
-def all_comment():
+def get_all_comment():
+    """
+    Get all information of comments that belong to a movie from the database.
+    """
     movie_id = flask.request.json.get("movie_id")
 
     query_comment = Comment.query.filter_by(movie_id=movie_id).all()
@@ -282,12 +307,14 @@ def all_comment():
     comment = []
     date = []
     hour = []
+    rating = []
 
     for item in query_comment:
         name.append(item.username)
         comment.append(item.comment)
         date.append(item.date)
         hour.append(item.hour)
+        rating.append(item.rating)
 
     all_comment = [
         {
@@ -295,13 +322,37 @@ def all_comment():
             "date": date,
             "hour": hour,
             "comment": comment,
+            "rating": rating,
         }
-        for name, date, hour, comment in zip(name, date, hour, comment)
+        for name, date, hour, comment, rating in zip(name, date, hour, comment, rating)
     ]
     comment_data = {"comment": all_comment}
     data = json.dumps(comment_data)
 
     return flask.jsonify({"status": 200, "all_comment": data})
+
+
+@app.route("/avg_rating", methods=["POST"])
+def get_avg_rating():
+    """
+    Get all ratings that belong to a movie from the database, then calculate its average value.
+    This value will be rounded.
+    """
+    movie_id = flask.request.json.get("movie_id")
+
+    query_comment = Comment.query.filter_by(movie_id=movie_id).all()
+
+    rating = []
+
+    for item in query_comment:
+        rating.append(item.rating)
+
+    if len(rating) > 0:
+        avg_rating = round(sum(rating) / len(rating))
+    else:
+        avg_rating = 0
+
+    return flask.jsonify({"status": 200, "avg_rating": avg_rating})
 
 
 app.run(

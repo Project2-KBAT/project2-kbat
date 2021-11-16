@@ -2,9 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function NavigationMenu() {
+  const args = JSON.parse(document.getElementById('data').text);
+
   return (
     <nav className="col-md-2 d-none d-md-block bg-light sidebar">
       <div className="sidebar-sticky">
+        <ul className="nav flex-column">
+          <li className="nav-item">
+            <div className="nav-link">
+              <div>
+                Welcome,
+                {' '}
+                {args.username}
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <hr />
+
         <ul className="nav flex-column">
           <li className="nav-item">
             <div className="nav-link">

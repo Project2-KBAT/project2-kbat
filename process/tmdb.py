@@ -13,7 +13,7 @@ URL_NO_IMAGE = (
 
 def get_popular_movie():
     """
-    abc
+    Get all information about popular movies from TheMovieDB.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/movie/popular?api_key="
@@ -43,7 +43,7 @@ def get_popular_movie():
 
 def get_top_rated_movie():
     """
-    abc
+    Get all information about top rated movies from TheMovieDB.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/movie/top_rated?api_key="
@@ -52,6 +52,7 @@ def get_top_rated_movie():
     )
     tmdb_response_json = tmdb_response.json()
 
+    id_movie = []
     poster_path = []
     title = []
     vote_average = []
@@ -59,6 +60,7 @@ def get_top_rated_movie():
     popularity = []
 
     for i in range(len(tmdb_response_json["results"])):
+        id_movie.append(tmdb_response_json["results"][i]["id"])
         poster_path.append(
             "".join([URL_IMAGE, tmdb_response_json["results"][i]["poster_path"]])
         )
@@ -66,12 +68,12 @@ def get_top_rated_movie():
         vote_average.append(tmdb_response_json["results"][i]["vote_average"])
         release_date.append(tmdb_response_json["results"][i]["release_date"])
         popularity.append(tmdb_response_json["results"][i]["popularity"])
-    return (poster_path, title, vote_average, release_date, popularity)
+    return (id_movie, poster_path, title, vote_average, release_date, popularity)
 
 
 def get_detail_movie(movie_id):
     """
-    Get details of each movie from the TheMovieDB.
+    Get details of each movie from TheMovieDB.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/movie/"
@@ -98,7 +100,7 @@ def get_detail_movie(movie_id):
 
 def get_search_movie(movie_name):
     """
-    Search for movies that are related to the keywords the user searches for from the TheDBMovie.
+    Search for movies that are related to the keywords the user searches for from TheDBMovie.
     """
     tmdb_response = requests.get(
         "https://api.themoviedb.org/3/search/movie?api_key="

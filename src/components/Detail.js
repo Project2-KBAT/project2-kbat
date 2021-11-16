@@ -1,14 +1,16 @@
-/* eslint-disable react/self-closing-comp, jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactStars from 'react-rating-stars-component';
+import '../style/Detail.css';
 import ToolBar from './Toolbar';
 import NavigationMenu from './NavigationMenu';
-import '../style/Detail.css';
 
 function Detail() {
   const { movieID } = useParams();
   const [detailMovie, setDetailMovie] = useState([]);
   const textInput = useRef(null);
+  const [ratingMovie, setRatingMovie] = useState(0);
+  const [avgRating, setAvgRating] = useState(0);
   const [newComment, setNewComment] = useState([]);
 
   useEffect(() => {
@@ -23,6 +25,17 @@ function Detail() {
       setDetailMovie(result);
     });
 
+    fetch('/avg_rating', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ movie_id: movieID }),
+    }).then((response) => response.json()).then((data) => {
+      const result = JSON.parse(data.avg_rating);
+      setAvgRating(result);
+    });
+
     fetch('/all_comment', {
       method: 'POST',
       headers: {
@@ -34,6 +47,10 @@ function Detail() {
       setNewComment(result.comment);
     });
   }, []);
+
+  const ratingChanged = (newRating) => {
+    setRatingMovie(newRating);
+  };
 
   const newListComment = [...newComment];
 
@@ -48,6 +65,7 @@ function Detail() {
       date: dateComment,
       hour: hourComment,
       comment: newItem,
+      rating: ratingMovie,
     });
     setNewComment(newListComment);
 
@@ -63,7 +81,19 @@ function Detail() {
         comment_movie: newItem,
         date: dateComment,
         hour: hourComment,
+        rating: ratingMovie,
       }),
+    });
+
+    fetch('/avg_rating', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ movie_id: movieID }),
+    }).then((response) => response.json()).then((data) => {
+      const result = JSON.parse(data.avg_rating);
+      setAvgRating(result);
     });
   }
 
@@ -71,7 +101,6 @@ function Detail() {
     <div className="Deatail">
       <div className="container p-0">
         <ToolBar />
-
         <div className="container-fluid">
           <div className="row">
             <NavigationMenu />
@@ -100,34 +129,36 @@ function Detail() {
 
               <hr />
 
-              <div className="container">
-                <div className="post">
-                  <div className="text">Thanks for rating us!</div>
+              <div>
+                <div>Rating:</div>
+                <ReactStars count={5} onChange={ratingChanged} size={24} activeColor="#ffd700" />
+                <div>Comment:</div>
+                <div className="textarea">
+                  <textarea cols="110" ref={textInput} placeholder="Add comment..." />
                 </div>
-                <div className="star-widget">
-                  <input type="radio" name="rate" id="rate-5" />
-                  <label htmlFor="rate-5" className="fas fa-star"></label>
-                  <input type="radio" name="rate" id="rate-4" />
-                  <label htmlFor="rate-4" className="fas fa-star"></label>
-                  <input type="radio" name="rate" id="rate-3" />
-                  <label htmlFor="rate-3" className="fas fa-star"></label>
-                  <input type="radio" name="rate" id="rate-2" />
-                  <label htmlFor="rate-2" className="fas fa-star"></label>
-                  <input type="radio" name="rate" id="rate-1" />
-                  <label htmlFor="rate-1" className="fas fa-star"></label>
-                  <div>
-                    <header></header>
-                    <div className="textarea">
-                      <textarea cols="30" ref={textInput} placeholder="Add comment..."></textarea>
-                    </div>
-                    <div className="btn">
-                      <button className="addComment" onClick={addComment} type="submit">Post</button>
-                    </div>
-                  </div>
+                <div className="btn">
+                  <button className="addComment" onClick={addComment} type="submit">Post</button>
                 </div>
               </div>
 
               <hr />
+
+              <div className="col-sm-3">
+                <div className="rating-block">
+                  <h4>Average user rating</h4>
+                  <h2 className="bold padding-bottom-7">
+                    <strong>{avgRating}</strong>
+                    {' '}
+                    <small>/ 5</small>
+                  </h2>
+                  {[...Array(avgRating)].map(() => (
+                    <img src="https://img.icons8.com/fluency/24/000000/star.png" alt="" />
+                  ))}
+                  {[...Array(5 - avgRating)].map(() => (
+                    <img src="https://img.icons8.com/color/24/000000/star--v1.png" alt="" />
+                  ))}
+                </div>
+              </div>
 
               {newComment.map((item) => (
                 <div className="row">
@@ -145,21 +176,9 @@ function Detail() {
                       </div>
                       <div className="col-sm-9">
                         <div className="review-block-rate">
-                          <button type="button" className="btn btn-warning btn-xs" aria-label="Left Align">
-                            <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
-                          <button type="button" className="btn btn-warning btn-xs" aria-label="Left Align">
-                            <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
-                          <button type="button" className="btn btn-warning btn-xs" aria-label="Left Align">
-                            <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
-                          <button type="button" className="btn btn-default btn-grey btn-xs" aria-label="Left Align">
-                            <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
-                          <button type="button" className="btn btn-default btn-grey btn-xs" aria-label="Left Align">
-                            <span className="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
+                          {[...Array(item.rating)].map(() => (
+                            <img src="https://img.icons8.com/fluency/24/000000/star.png" alt="" />
+                          ))}
                         </div>
                         <div className="review-block-description">{item.comment}</div>
                       </div>

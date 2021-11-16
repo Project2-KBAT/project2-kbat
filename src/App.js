@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './bootstrap.min.css';
+import './style/bootstrap.min.css';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import NavigationMenu from './components/NavigationMenu';
@@ -12,7 +12,6 @@ function App() {
     <div className="App">
       <div className="container p-0">
         <SearchBar />
-
         <div className="container-fluid">
           <div className="row">
             <NavigationMenu />
