@@ -1,7 +1,4 @@
 <div id="main">
-    <button> <a href="/" type="button">Home</a></button>
-    <button> <a href="/signup" type="button">Sign Up</a></button>
-    <button> <a href="/login" type="button">Log In</a></button>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         * {
@@ -37,6 +34,18 @@
             animation: type 0.5s alternate infinite;
         }
 
+        .login-error-msg {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .login-error-msg h1 {
+            font-size: 50px;
+            display: inline-block;
+            padding-right: 12px;
+            animation: type 0.5s alternate infinite;
+        }
+
         @keyframes type {
             from {
                 box-shadow: inset -3px 0px 0px #888;
@@ -55,8 +64,7 @@
     function redirect() {
         location.replace("/login")
     }
-
-    setTimeout(function () { redirect(); }, 4000);
+    setTimeout(function () { redirect(); }, 3000);
 </script>
 
 </html>

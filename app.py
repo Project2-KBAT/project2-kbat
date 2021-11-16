@@ -227,6 +227,13 @@ def login_post():
     return flask.render_template("wrong_combo.html")
 
 
+@app.errorhandler(404)
+def invalid_route(e):
+    # return "Invalid route."
+    # return jsonify({'errorCode' : 404, 'message' : 'Route not found'})
+    return flask.render_template("404.html")
+
+
 @app.route("/")
 def main():
     """
