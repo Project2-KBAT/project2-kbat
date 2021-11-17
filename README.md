@@ -2,7 +2,9 @@
 
 Have you ever had trouble finding a TV show or movie to watch or just don't have the time to go through the reviews for everything? Here lies our repository dedicated to helping you find something right now :)
 
-[![Heroku Link](https://thawing-plains-43721.herokuapp.com/)]
+Here lies the Heroku Link:
+[![Heroku Link](https://thawing-plains-43721.herokuapp.com/)]  
+Check it out!
 <br>
 
 # Tech Stacks Used In Our Application
@@ -40,9 +42,9 @@ Handle API Requests using the following:
 
 Create a .env file and have the following:
 ```
-API_KEY = ```<API_KEY>```
-API_TOKEN = ```<API_TOKEN>```
-DATABASE_URL = ```<Insert Database URL starting with "postgres://">```
+API_KEY = <API_KEY>
+API_TOKEN = <API_TOKEN>
+DATABASE_URL = <Insert Database URL starting with "postgres://">
 ```
 
 A once Flask developed app has gone rogue and reuped into a React App :) . We had to convert the code from HTML to JSX functions. The issue was the functions that we embedded into the app from our python files had to be made in our JavaScript file. This was done with the help of the Professors code, but we had to add a few tingz. Those are:
@@ -64,13 +66,18 @@ A once Flask developed app has gone rogue and reuped into a React App :) . We ha
 <li>Backdrop Background</li>
 <li>Setting for User</li>
 
-Project 2 Checklist:
-[X] - Branching: Gon be working on "<user>" branch and may work by using each spec as teh branch name. Final is pushed to main branch  
-[X] - Linting: Download Lint and format my code with Black. Also download ESLint and used AirBNB settings for React formatting. Used the following link to install it: https://marcobelo.medium.com/setting-up-python-black-on-visual-studio-code-5318eba4cd00 and it is now up and running in the settings of the remote server. Even though I used the command to install Black, I ended up having to use "python -m pip install -U black" instead of just "pip install black" or "pip install -U black"
-[X] - User Input: User Should Give User Input and find the artist
-[X] - Personalization: Had two members working on front end (Binh Le and Akash Dansinghani) and two members working on backend of application (Kenny Wu and Taariq Glean). We worked together to make sure every thing seemed seemless and the format of our backend and frontend alligned.
-[X] - Login Screen: Username and Password for my site which will be passed into the data base and check if user's account exists. If not, they will have to create an account.
-[X] - API: We used TheMovieDB API for our requests
+Project 2 Checklist:  
+[X] - Branching: Gon be working on "<user>" branch and may work by using each spec as teh branch name. Final is pushed to main branch    
+
+[X] - Linting: Download Lint and format my code with Black. Also download ESLint and used AirBNB settings for React formatting. Used the following link to install it: https://marcobelo.medium.com/setting-up-python-black-on-visual-studio-code-5318eba4cd00 and it is now up and running in the settings of the remote server. Even though I used the command to install Black, I ended up having to use "python -m pip install -U black" instead of just "pip install black" or "pip install -U black"  
+
+[X] - User Input: User Should Give User Input and find the artist  
+
+[X] - Personalization: Had two members working on front end (Binh Le and Akash Dansinghani) and two members working on backend of application (Kenny Wu and Taariq Glean). We worked together to make sure every thing seemed seemless and the format of our backend and frontend alligned.  
+
+[X] - Login Screen: Username and Password for my site which will be passed into the data base and check if user's account exists. If not, they will have to create an account.  
+
+[X] - API: We used TheMovieDB API for our requests  
 
 ## Running Locally
 
