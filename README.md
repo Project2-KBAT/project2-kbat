@@ -36,7 +36,15 @@ Check it out!
 # Navigating through MovieDB API
 
 Handle API Requests using the following:
-```https://api.themoviedb.org/3/movie/550?api_key=<API_KEY>```
+```https://api.themoviedb.org/3/movie/550?api_key=<API_KEY>```  
+Use the API_KEY as a environment variable so you are able to access the API's functions and abilities to gather information from it.  
+To generate an API you need to:  
+```
+1. Create an account from https://www.themoviedb.org/
+2. Once you verify your account you should be able to login to your account
+3. Go into Settings >> API
+4. There should lie your API Key which you can store in the .env file
+```
 
 # Instructions
 
@@ -124,7 +132,7 @@ or
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-## Logging in for Testing
+## Logging in for Testing (Or Create an Account)
 
 username: user@gmail.com
 password: test
@@ -137,7 +145,7 @@ For more information about using Python on Heroku, see these Dev Center articles
 
 ## Prolems with the Program :/
 
-1.Writing and calling JavaScript functions. Specifically, any functions that had to do with the Database was an issue. I was able to implement the add function, save function, and finally a delete function, however it worked maybe two or three builds and then both of the functions stopped working outta no where. I got it to work but not sure if it will work with Heorku very well.
+1.Since there are more than one way to skin a cat, the same thing applies to React. I was working on the front end along with my peer and I had to restructure my code because I ended up creating components for everything including the login page and sign up page which you can see in my components which I ultimately
 
 2.I was working with different branches in Heroku (I had a origin, remote, and Heroku branch) but that was more of a Git issue and I have a bad habit of using whatever push command I remember so it created different types of repos in one app (I'm still a Git noob). I solved this by using the command git remote rm <app-name>.
 
