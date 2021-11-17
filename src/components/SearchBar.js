@@ -7,7 +7,11 @@ function SearchBar() {
 
   const searchMovie = () => {
     const movieName = textInput.current.value;
-    navigate(`/search/${movieName}`);
+    if (movieName !== '') {
+      navigate(`/search/${movieName}`);
+    } else {
+      alert('Please enter name of movie');
+    }
   };
 
   return (

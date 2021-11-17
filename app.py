@@ -264,6 +264,7 @@ def search():
     Search for information of a movie through keyword.
     """
     data = get_search()
+    print(data)
     return flask.jsonify({"status": 200, "search": data})
 
 
@@ -357,5 +358,5 @@ def get_avg_rating():
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
-    port=int(os.getenv("PORT", 8086)),
+    port=int(os.getenv("PORT", 8081)),
 )
