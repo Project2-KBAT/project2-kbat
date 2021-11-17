@@ -2,9 +2,8 @@
 
 Have you ever had trouble finding a TV show or movie to watch or just don't have the time to go through the reviews for everything? Here lies our repository dedicated to helping you find something right now :)
 
-Here lies the Heroku Link:
+Check it out the App on Heroku:
 [![Heroku Link](https://thawing-plains-43721.herokuapp.com/)]  
-Check it out!
 <br>
 
 # Tech Stacks Used In Our Application
@@ -13,6 +12,19 @@ Check it out!
 -Bootstrap (Front End)  
 -Flask (Backend)  
 -SQLAlchemy (Backend)  
+
+# Libraries Imported for Project
+-os
+-json
+-sys
+-flask
+-requests
+-flask_login
+-werkzeug.security
+-flask_sqlalchemy
+-dotenv
+
+
 
 
 # Mockups
@@ -149,7 +161,7 @@ For more information about using Python on Heroku, see these Dev Center articles
 
 2.I was working with different branches in Heroku (I had a origin, remote, and Heroku branch) but that was more of a Git issue and I have a bad habit of using whatever push command I remember so it created different types of repos in one app (I'm still a Git noob). I solved this by using the command git remote rm <app-name>.
 
-3.I ended up using my paths that I had for my Milestone 2 code with this milestone and tried to jerryrig my functions to work with the Professor's code. It ended up working out, but I think it made my life harder unfortunately so I should have gotten all my code to work with the Professor's code first then sauced in my code and I think that would have been a more pleasant experience.
+3.I think just learning React more and dealing with componenets and communicating with the database and flask was something I had to figure out. Once I got the hang of the API I was using, it was not to difficult to work with it.
 
 Error Logs:
 
@@ -158,11 +170,11 @@ spotipy 2.19.0 requires urllib3>=1.26.0, but you'll have urllib3 1.24.1 which is
 error code=H10 desc="App crashed" method=GET path="/" host
 ```
 
-I used "heroku logs --dyno=web --app=project2-002354500" and this is where I had to either redo and trouble shoot everything on my requirements.txt or Procfile file :(
+I used "heroku logs --dyno=web --app=project2" and this is where I had to either redo and trouble shoot everything on my requirements.txt or Procfile file :(
 
 Solved by using this website: https://dev.to/lawrence_eagles/causes-of-heroku-h10-app-crashed-error-and-how-to-solve-them-3jnl
 
-Not proficent with databases but will reup on the next project :()
+Not proficent with databases but will reup on the next project :(
 
 # Flask and `create-react-app`
 
