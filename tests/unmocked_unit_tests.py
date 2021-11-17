@@ -27,6 +27,16 @@ cover it in class. Note how it frees us up to test multiple helper
 functions in a single class.
 """
 
+"""
+search_input = input("Gimme something to search: ")
+load_req = "Loading your search request "  #%s is the variable
+print(load_req + search_input + "...")
+response = api_search(search_input)
+print(response)
+"""
+
+# the test api_search is based off the code above which works... just not working for the unit testing
+
 
 class tmbdHelperTests(unittest.TestCase):
     def test_api_search_1(self):
