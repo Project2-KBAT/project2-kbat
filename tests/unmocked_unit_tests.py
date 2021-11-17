@@ -14,7 +14,7 @@ parent = os.path.dirname(current)
 # the sys.path.
 sys.path.append(parent)
 
-from tmdb import api_search, get_top_rated_movie
+from tmdb import api_search, get_top_rated_movie, get_detail_movie
 
 INPUT = "INPUT"
 EXPECTED_OUTPUT = "EXPECTED_OUTPUT"
@@ -40,13 +40,18 @@ print(response)
 
 class tmbdHelperTests(unittest.TestCase):
     def test_api_search_1(self):
-        self.assertEqual(api_search(None))
+        # empty case
+
+        # self.assertEqual(api_search(None))
         self.assertEqual(api_search(""))
 
     def test_api_search_2(self):
-        search_input = input("Gimme something to search: ")
-        self.assertEqual(api_search(search_input))
-        self.assertEqual(api_search("The Eternals"))
+        # ask for input
+        try:
+            search_input = input("Gimme something to search: ")
+            self.assertEqual(api_search(search_input))
+        except:
+            self.assertEqual(api_search("The Eternals"))
 
     def test_api_search_3(self):
         # This is a big enough JSON that we should probably split it out for
@@ -58,12 +63,12 @@ class tmbdHelperTests(unittest.TestCase):
     """"""
 
     def test_get_top_rated_movie_1(self):
-        self.assertEqual(get_top_rated_movie({}), (None, None, None, None, None))
+        self.assertEqual(get_top_rated_movie(""), ([], [], [], [], []))
 
     def test_get_top_rated_movie_2(self):
         self.assertEqual(
-            get_top_rated_movie({"name": "Shang-Chi and the Legend of the Ten Rings"}),
-            ("Shang-Chi and the Legend of the Ten Rings", None, None, None, None),
+            get_top_rated_movie("Shang-Chi and the Legend of the Ten Rings"),
+            ([], [], [], [], []),
         )
 
     def test_get_top_rated_movie_3(self):
@@ -86,6 +91,15 @@ class tmbdHelperTests(unittest.TestCase):
                 "2021-09-01",
                 "9993.05",
             ),
+        )
+
+    def test_get_detail_movie_1(self):
+        self.assertEqual(get_detail_movie(""), ([], [], [], [], [], [], []))
+
+    def test_get_detail_movie_2(self):
+        self.assertEqual(
+            get_detail_movie("Shang-Chi and the Legend of the Ten Rings"),
+            ([], [], [], [], [], [], []),
         )
 
 
