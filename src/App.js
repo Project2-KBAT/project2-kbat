@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style/bootstrap.min.css';
+
 import './App.css';
 import SearchBar from './components/SearchBar';
 import NavigationMenu from './components/NavigationMenu';
