@@ -41,16 +41,18 @@ print(response)
 class tmbdHelperTests(unittest.TestCase):
     def test_api_search_1(self):
         self.assertEqual(api_search(None))
+        self.assertEqual(api_search(""))
 
     def test_api_search_2(self):
-        self.assertEqual(api_search({"name": "title"}))
+        search_input = input("Gimme something to search: ")
+        self.assertEqual(api_search(search_input))
+        self.assertEqual(api_search("The Eternals"))
 
     def test_api_search_3(self):
         # This is a big enough JSON that we should probably split it out for
         # readability
-        title_json = {
-            "name": "title",
-        }
+        search_input = input("Gimme something to search: ")
+        title_json = search_input
         self.assertEqual(api_search(title_json))
 
     """"""
@@ -60,7 +62,8 @@ class tmbdHelperTests(unittest.TestCase):
 
     def test_get_top_rated_movie_2(self):
         self.assertEqual(
-            get_top_rated_movie({"name": "title"}), ("title", None, None, None, None)
+            get_top_rated_movie({"name": "Shang-Chi and the Legend of the Ten Rings"}),
+            ("Shang-Chi and the Legend of the Ten Rings", None, None, None, None),
         )
 
     def test_get_top_rated_movie_3(self):
