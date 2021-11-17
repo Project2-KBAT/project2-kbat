@@ -17,9 +17,17 @@ Have you ever had trouble finding a TV show or movie to watch or just don't have
 
 ![Welcome Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/welcome-page.png)
 ![Welcome Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Welcome%20Page.png)
-![Login Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Login.png)
-![Sign Up Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Signup.png)
+![Login Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20In.png)
+![Wrong Combonation Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/wrong_combo_error.gif)
+![Sign Up Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20Up.png)
+![404 Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/404_error.gif)
 ![Main Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/main-page.png)
+![Main Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)
+![Popular Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)
+![Top Rated Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Top%20Rated%20Movies.png)
+![Movie Overview Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/movie_overview.png)
+![Search No Results Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/query_mismatch.png)
+![Search Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/search_movies.png)
 
 # Navigating through MovieDB API
 
