@@ -2,32 +2,34 @@
 
 Have you ever had trouble finding a TV show or movie to watch or just don't have the time to go through the reviews for everything? Here lies our repository dedicated to helping you find something right now :)
 
-[![Heroku Link](https://thawing-plains-43721.herokuapp.com/) “Heroku”]
+[![Heroku Link](https://thawing-plains-43721.herokuapp.com/)]
 <br>
 
 # Tech Stacks Used In Our Application
--ReactJS (Front End)
--HTML,CSS, and Javascript (Front End)
--Bootstrap (Front End)
--Flask (Backend)
--SQLAlchemy (Backend)
+-ReactJS (Front End)  
+-HTML,CSS, and Javascript (Front End)  
+-Bootstrap (Front End)  
+-Flask (Backend)  
+-SQLAlchemy (Backend)  
 
 
 # Mockups
 
 ![Welcome Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/welcome-page.png)
-![Welcome Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Welcome%20Page.png)
-![Login Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20In.png)
-![Wrong Combonation Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/wrong_combo_error.gif)
-![Sign Up Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20Up.png)
-![404 Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/404_error.gif)
 ![Main Page Mockup](https://raw.githubusercontent.com/adansinghani1/Entertainment-Finder/master/imgs/main-page.png)
-![Main Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)
-![Popular Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)
-![Top Rated Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Top%20Rated%20Movies.png)
-![Movie Overview Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/movie_overview.png)
-![Search No Results Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/query_mismatch.png)
-![Search Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/search_movies.png)
+
+# Website Overview
+![Welcome Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Welcome%20Page.png)  
+![Login Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20In.png)  
+![Wrong Combonation Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/wrong_combo_error.gif)  
+![Sign Up Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Sign%20Up.png)  
+![404 Error](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/404_error.gif)
+![Main Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)  
+![Popular Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/mainpage.jpg)  
+![Top Rated Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/Top%20Rated%20Movies.png)  
+![Movie Overview Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/movie_overview.png)  
+![Search No Results Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/query_mismatch.png)  
+![Search Movies Page](https://raw.githubusercontent.com/csc4350-f21-KBAT/project2/Kash/imgs/search_movies.png)   
 
 # Navigating through MovieDB API
 
@@ -159,7 +161,3 @@ Not proficent with databases but will reup on the next project :()
 2. Run command in terminal (in your project directory): `python3 app.py`
 3. Preview web page in browser 'localhost:8080/' (or whichever port you're using)
 
-## Deploy to Heroku
-1. Create a Heroku app: `heroku create --buildpack heroku/python`
-2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
-3. Push to Heroku: `git push heroku main`
