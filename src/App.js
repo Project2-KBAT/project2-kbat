@@ -20,8 +20,7 @@ function App() {
   }, []);
 
   return (
-    <div>
-
+    <div className="movie-container">
       <RandomMovie {...movie} />
     </div>
   );
